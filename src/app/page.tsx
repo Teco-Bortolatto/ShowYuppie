@@ -19,7 +19,7 @@ export default function Home() {
     <main className="min-h-screen bg-pattern flex flex-col items-center justify-center p-xl text-center">
       <header className="mb-2xl">
         <h1 className="text-[32px] font-fredoka font-bold text-text mb-sm flex items-center justify-center gap-xs">
-          Show Yuppie <span className="text-[24px]">🎪</span>
+          Show Yuppie <div className="text-[24px]">🎪</div>
         </h1>
         <p className="text-body font-nunito text-text-sf">
           monta a lineup dos seus sonhos com a galera
@@ -52,9 +52,9 @@ export default function Home() {
               Entrar
             </button>
           </form>
-          <span className="text-tiny font-nunito text-text-mt uppercase tracking-wider">
+          <div className="text-tiny font-nunito text-text-mt uppercase tracking-wider">
             ou entre com um código
-          </span>
+          </div>
         </div>
       </div>
     </main>

@@ -162,7 +162,7 @@ export default function RecapPage({ params }: RecapPageProps) {
             </div>
           </div>
 
-          <div className={`mt-auto p-md rounded-lg border-2 ${template === "neon" ? "bg-[#1F1225]/70 border-white/20" : "bg-bg-el border-border"} backdrop-blur-md`}>
+          <div className={`mt-auto p-md rounded-lg border-2 ${template === "neon" ? "bg-[#1F1225] border-white" : "bg-bg-el border-border"}`}>
             <div className="grid grid-cols-2 gap-md">
               <div className="flex flex-col items-center text-center">
                 <div className="mb-xs text-[18px]">⏰</div>
