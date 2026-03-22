@@ -5,7 +5,6 @@ import { Board } from "@/components/Board";
 import { NicknameModal } from "@/components/NicknameModal";
 import { RankingModal } from "@/components/RankingModal";
 import { RecapModal } from "@/components/RecapModal";
-import { Link as LinkIcon, ChevronLeft, Clapperboard, Settings, Trash2, X } from "lucide-react";
 import Link from "next/link";
 
 interface FestivalPageProps {
@@ -19,7 +18,7 @@ export default function FestivalPage({ params }: FestivalPageProps) {
   const [nickname, setNickname] = useState<string | null>(null);
   const [isRankingOpen, setIsRankingOpen] = useState(false);
   const [isRecapOpen, setIsRecapOpen] = useState(false);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
   const [votes, setVotes] = useState<any>({});
 
   useEffect(() => {
@@ -54,22 +53,13 @@ export default function FestivalPage({ params }: FestivalPageProps) {
     setTimeout(() => setToast(null), 2200);
   };
 
-  const clearVotes = () => {
-    if (confirm("Tem certeza que quer limpar TODOS os seus votos? 🥺 (Heurística #5)")) {
-      localStorage.removeItem(`festival_votes_${id}`);
-      setVotes({});
-      setIsSettingsOpen(false);
-      window.location.reload();
-    }
-  };
-
   return (
     <main className="h-screen bg-bg flex flex-col overflow-hidden safe-pt safe-pb">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b-1.5 border-border px-6 py-5 sticky top-0 z-50 flex items-center justify-between">
+      <header className="bg-bg-el border-b-2 border-border px-6 py-5 sticky top-0 z-50 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link href="/" className="p-sm rounded-full hover:bg-bg-sk transition-colors active:scale-90">
-            <ChevronLeft size={20} className="text-text-sf" />
+          <Link href="/" className="w-11 h-11 rounded-full bg-bg-sk border-2 border-border flex items-center justify-center text-text hover:bg-bg-el active:scale-95 transition-all" aria-label="Voltar">
+            ⬅️
           </Link>
           <div className="flex flex-col">
             <h1 className="text-body font-fredoka font-bold text-text truncate max-w-[140px] md:max-w-md">
@@ -83,21 +73,12 @@ export default function FestivalPage({ params }: FestivalPageProps) {
 
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-            className="p-sm rounded-full bg-bg-sk text-text-sf hover:scale-110 active:scale-95 transition-all"
-            title="Configurações"
-            aria-label="Configurações"
-          >
-            <Settings size={20} />
-          </button>
-
-          <button
             onClick={() => setIsRecapOpen(true)}
-            className="p-sm rounded-full bg-pink-lt text-pink-dk hover:scale-110 active:scale-95 transition-all"
+            className="w-11 h-11 rounded-full bg-pink-lt border-2 border-pink text-pink-dk hover:bg-pink active:scale-95 transition-all flex items-center justify-center"
             title="Recap"
             aria-label="Recap"
           >
-            <Clapperboard size={20} />
+            🎬
           </button>
 
           <button
@@ -106,45 +87,28 @@ export default function FestivalPage({ params }: FestivalPageProps) {
               if (currentVotes) setVotes(JSON.parse(currentVotes));
               setIsRankingOpen(true);
             }}
-            className="p-sm rounded-full bg-yellow-lt text-yellow-dk hover:scale-110 active:scale-95 transition-all"
+            className="w-11 h-11 rounded-full bg-yellow-lt border-2 border-yellow text-yellow-dk hover:bg-yellow active:scale-95 transition-all flex items-center justify-center"
             title="Ranking"
             aria-label="Ranking"
           >
-            <span className="text-[18px] leading-none">🏆</span>
+            🏆
           </button>
 
           <button
-            onClick={copyLink}
-            className="p-sm rounded-full bg-lilac-lt text-lilac-dk hover:scale-110 active:scale-95 transition-all"
+            onClick={() => setIsShareOpen(true)}
+            className="w-11 h-11 rounded-full bg-lilac-lt border-2 border-lilac text-lilac-dk hover:bg-pink-lt active:scale-95 transition-all flex items-center justify-center"
             title="Compartilhar"
             aria-label="Compartilhar"
           >
-            <LinkIcon size={20} />
+            🔗
           </button>
         </div>
       </header>
 
-      {/* Settings Menu (Heuristic #3) */}
-      {isSettingsOpen && (
-        <div className="absolute top-[72px] right-4 bg-white border-2 border-border rounded-xl shadow-xl z-50 p-md animate-bounce-in w-[200px]">
-          <div className="flex items-center justify-between mb-sm pb-xs border-b border-border">
-            <span className="font-fredoka font-bold text-text text-sm">Ações</span>
-            <button onClick={() => setIsSettingsOpen(false)}><X size={14} /></button>
-          </div>
-          <button 
-            onClick={clearVotes}
-            className="w-full flex items-center gap-sm p-sm rounded-md text-pink-dk hover:bg-pink-lt/30 transition-colors text-sm font-nunito font-bold"
-          >
-            <Trash2 size={16} />
-            Limpar Votos
-          </button>
-        </div>
-      )}
-
       {/* Board with Timeline labels */}
       <div className="flex-1 flex flex-row gap-0 overflow-hidden relative">
         {/* Timeline Labels */}
-        <div className="w-[44px] flex flex-col pt-[52px] bg-bg-sk/50 border-r border-border/50 text-center sticky left-0 z-20 pointer-events-none">
+        <div className="w-[44px] flex flex-col pt-[52px] bg-bg-sk border-r border-border text-center sticky left-0 z-20 pointer-events-none">
           {Array.from({ length: 12 }).map((_, i) => (
             <div key={i} className="h-[80px] text-[10px] font-nunito text-text-mt font-bold pt-1">
               {12 + i}h
@@ -170,6 +134,53 @@ export default function FestivalPage({ params }: FestivalPageProps) {
           festivalId={id} 
           onClose={() => setIsRecapOpen(false)} 
         />
+      )}
+
+      {isShareOpen && (
+        <div className="fixed inset-0 z-[120] bg-text/40 backdrop-blur-sm flex items-end justify-center p-4">
+          <div className="w-full max-w-[420px] bg-bg-el border-2 border-border rounded-xl p-4 animate-bounce-in">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex flex-col gap-1">
+                <div className="text-h3 font-fredoka font-bold text-text">
+                  🔗 Chama a galera
+                </div>
+                <div className="text-small font-nunito text-text-sf">
+                  Copia o link e manda no grupo pra todo mundo votar junto
+                </div>
+              </div>
+              <button
+                onClick={() => setIsShareOpen(false)}
+                className="w-11 h-11 rounded-full border-2 border-border bg-bg-sk text-text flex items-center justify-center active:scale-95 transition-all"
+                aria-label="Fechar"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="mt-4 flex flex-col gap-3">
+              <input
+                readOnly
+                value={typeof window !== "undefined" ? window.location.href : ""}
+                className="w-full bg-bg-sk border-2 border-border rounded-md px-3 py-3 text-small font-nunito text-text"
+                aria-label="Link do festival"
+              />
+              <div className="flex gap-3">
+                <button
+                  onClick={copyLink}
+                  className="flex-1 bg-lilac text-white border-2 border-lilac rounded-md py-3 text-body font-nunito font-bold active:scale-95 transition-all"
+                >
+                  Link convite 🔗
+                </button>
+                <button
+                  onClick={() => setIsShareOpen(false)}
+                  className="flex-1 bg-transparent border-2 border-lilac text-lilac-dk rounded-md py-3 text-body font-nunito font-bold active:scale-95 transition-all"
+                >
+                  Fechar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Toast */}

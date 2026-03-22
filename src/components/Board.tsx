@@ -6,7 +6,6 @@ import { ArtistPopover } from "@/components/ArtistPopover";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { useParams } from "next/navigation";
-import { HelpCircle } from "lucide-react";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -65,7 +64,6 @@ export function ShowCard({
   const showVotes = allVotes[show.id] || [];
   const myVote = showVotes.find(v => v.nickname === nickname)?.type || null;
 
-  // Calculate position/height
   const startParts = show.start.split(":").map(Number);
   const endParts = show.end.split(":").map(Number);
   const durationInMinutes = (endParts[0] * 60 + endParts[1]) - (startParts[0] * 60 + startParts[1]);
@@ -119,14 +117,19 @@ export function ShowCard({
         animationDelay: `${index * 50}ms`,
       }}
     >
-      <div className="flex flex-col justify-between overflow-visible relative min-h-[40px]">
+      <div className="flex flex-col justify-between overflow-visible relative min-h-[44px]">
+        {isLeader && (
+          <div className="mb-1 bg-yellow border-2 border-yellow rounded-md px-2 py-1 text-[11px] font-nunito font-bold text-yellow-dk">
+            🏆 MAIS VOTADO
+          </div>
+        )}
         <div ref={popoverWrapRef} className="absolute -top-1 -right-1">
           <button 
             onClick={() => setIsPopoverOpen(!isPopoverOpen)}
             className="p-1 text-text-mt hover:text-lilac transition-colors"
             aria-label="Sobre o artista"
           >
-            <HelpCircle size={14} />
+            ❓
           </button>
 
           {isPopoverOpen && (
@@ -138,44 +141,42 @@ export function ShowCard({
           {show.artist}
         </h3>
         <div className="flex items-center gap-1">
-          <p className="text-[10px] font-nunito text-text-sf">
-            {show.start}
-          </p>
+          <div className="text-[11px] font-nunito text-text-sf">
+            {show.start} - {show.end}
+          </div>
         </div>
       </div>
 
-      {/* Vote Buttons - More compact for mobile */}
       <div className="flex gap-1 mt-auto">
         <button
           onClick={() => handleVote("vou")}
           className={cn(
-            "flex-1 py-1 px-0 rounded-sm text-[10px] font-nunito font-bold transition-all active:scale-95 border border-border",
-            myVote === "vou" ? "bg-mint-lt text-mint-dk border-mint" : "bg-white text-text-sf"
+            "flex-1 h-11 rounded-md text-[12px] font-nunito font-bold transition-all active:scale-95 border-2",
+            myVote === "vou" ? "bg-mint text-mint-dk border-mint" : "bg-transparent text-text-sf border-border"
           )}
         >
-          🤩
+          🤩 Vou!
         </button>
         <button
           onClick={() => handleVote("curtia")}
           className={cn(
-            "flex-1 py-1 px-0 rounded-sm text-[10px] font-nunito font-bold transition-all active:scale-95 border border-border",
-            myVote === "curtia" ? "bg-yellow-lt text-yellow-dk border-yellow" : "bg-white text-text-sf"
+            "flex-1 h-11 rounded-md text-[12px] font-nunito font-bold transition-all active:scale-95 border-2",
+            myVote === "curtia" ? "bg-yellow text-yellow-dk border-yellow" : "bg-transparent text-text-sf border-border"
           )}
         >
-          😊
+          😊 Curtia
         </button>
         <button
           onClick={() => handleVote("meh")}
           className={cn(
-            "flex-1 py-1 px-0 rounded-sm text-[10px] font-nunito font-bold transition-all active:scale-95 border border-border",
-            myVote === "meh" ? "bg-bg-sk text-text-mt border-border" : "bg-white text-text-sf"
+            "flex-1 h-11 rounded-md text-[12px] font-nunito font-bold transition-all active:scale-95 border-2",
+            myVote === "meh" ? "bg-bg-sk text-text-sf border-border" : "bg-transparent text-text-sf border-border"
           )}
         >
-          😐
+          😐 Meh
         </button>
       </div>
 
-      {/* Who Voted - Minimal for mobile */}
       {showVotes.length > 0 && (
         <div className="mt-1">
           <div className="flex -space-x-1">
@@ -209,12 +210,11 @@ export function ShowCard({
         </div>
       )}
 
-      {/* Explosion Effect */}
       {isExploding && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <span className="text-2xl animate-ping">
+          <div className="text-2xl animate-ping">
             {myVote === "vou" ? "🤩" : myVote === "curtia" ? "😊" : "😐"}
-          </span>
+          </div>
         </div>
       )}
     </div>
@@ -235,12 +235,12 @@ export function StageColumn({
   const stageShows = SHOWS.filter((s: Show) => s.stage === stage.id);
 
   return (
-    <div className="flex-shrink-0 w-[80vw] snap-center flex flex-col h-full border-r border-border/50">
+    <div className="flex-shrink-0 w-[calc(100vw-44px)] min-w-[280px] snap-start snap-stop-always flex flex-col h-full border-r border-border/50">
       <div
-        className="h-[52px] flex items-center justify-center gap-sm px-md py-sm sticky top-0 z-30"
+        className="h-[52px] flex items-center justify-center gap-2 px-md py-sm sticky top-0 z-30"
         style={{ backgroundColor: stage.color }}
       >
-        <span className="text-[18px]">{stage.emoji}</span>
+        <div className="text-[18px]">{stage.emoji}</div>
         <h2 className="text-body font-fredoka font-bold text-text truncate">
           {stage.name.split(' ').slice(1).join(' ')}
         </h2>
@@ -281,7 +281,6 @@ export function Board() {
   const [currentTime, setCurrentTime] = useState(0);
 
   useEffect(() => {
-    // For demo, let's say it's 16:30
     setCurrentTime(((16 - 12) * 60 + 30) / 60 * 80);
 
     const saved = localStorage.getItem(`festival_votes_${festivalId}`);
@@ -293,7 +292,6 @@ export function Board() {
         return;
       }
     } else {
-      // Mock initial votes for demo
       const mockUsers = [
         { name: "Juh ✨", style: "vou" as VoteType },
         { name: "Pedrão 🤘", style: "curtia" as VoteType },
@@ -302,7 +300,6 @@ export function Board() {
       
       const initialMockVotes: FestivalVotes = {};
       SHOWS.forEach(show => {
-        // Randomly assign votes to about 60% of shows
         if (Math.random() > 0.4) {
           const votersCount = Math.floor(Math.random() * 3) + 1;
           const voters = [...mockUsers].sort(() => 0.5 - Math.random()).slice(0, votersCount);
@@ -359,7 +356,6 @@ export function Board() {
 
       localStorage.setItem(`festival_votes_${festivalId}`, JSON.stringify(newVotes));
       
-      // Check for conflicts
       if (type === "vou") {
         checkConflicts(showId, nickname, newVotes);
       }
@@ -426,13 +422,17 @@ export function Board() {
         </div>
       )}
       
-      <div className="flex-1 overflow-x-auto snap-x-mandatory scroll-smooth pb-10 custom-scrollbar relative">
-        {/* Current Time Indicator (Heuristic #1) */}
+      <div
+        className="flex-1 overflow-x-auto snap-x-mandatory scroll-smooth pb-10 custom-scrollbar relative"
+        style={{ scrollPaddingLeft: "44px" }}
+      >
         <div 
           className="absolute left-0 right-0 border-t-2 border-pink z-40 pointer-events-none flex items-center"
           style={{ top: `${currentTime + 52}px` }}
         >
-          <span className="bg-pink text-white text-[8px] font-bold px-1 rounded-r-sm">AGORA</span>
+          <div className="bg-yellow border-2 border-yellow rounded-r-md px-2 py-1 text-[11px] font-nunito font-bold text-yellow-dk">
+            AGORA
+          </div>
         </div>
 
         <div className="flex gap-0 min-w-max h-full">

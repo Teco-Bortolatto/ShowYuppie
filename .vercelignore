@@ -2,6 +2,8 @@ node_modules
 build
 dist
 .next
+.next/
+.next/**
 .git
 .vercel
 .trae

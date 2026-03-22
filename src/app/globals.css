@@ -1,29 +1,42 @@
 @import "tailwindcss";
 
 :root {
-  --lilac: #C8B6FF;
-  --lilac-lt: #E8DEFF;
-  --lilac-dk: #9B85E3;
-  --pink: #FFB3C6;
-  --pink-lt: #FFD6E0;
-  --pink-dk: #E8849B;
-  --mint: #A8E6CF;
-  --mint-lt: #D0F5E6;
-  --mint-dk: #5CB88A;
-  --yellow: #FFE066;
-  --yellow-lt: #FFF3B8;
-  --yellow-dk: #C9A800;
-  --peach: #FFCBA4;
-  --peach-lt: #FFE5D0;
-  --peach-dk: #D4895A;
+  --yp-lilac: #D8B4FE;
+  --yp-pink: #FBB6CE;
+  --yp-mint: #A7F3D0;
+  --yp-lemon: #FDE68A;
+  --yp-peach: #FDBA74;
+  --yp-sky: #BAE6FD;
 
-  --bg: #FFFBFE;
-  --bg-el: #FFFFFF;
-  --bg-sk: #F5F0FA;
-  --text: #2D2235;
-  --text-sf: #7A6E87;
-  --text-mt: #B8AEC5;
-  --border: #E8E0F0;
+  --yp-bg: #FFFBFE;
+  --yp-surface: #FFF5F7;
+  --yp-text: #1F1225;
+  --yp-text-soft: #6B5A7B;
+  --yp-border: #F0E4F4;
+
+  --lilac: var(--yp-lilac);
+  --lilac-lt: #F1E6FF;
+  --lilac-dk: #6D28D9;
+  --pink: var(--yp-pink);
+  --pink-lt: #FFE3EC;
+  --pink-dk: #9D174D;
+  --mint: var(--yp-mint);
+  --mint-lt: #D1FAE5;
+  --mint-dk: #065F46;
+  --yellow: var(--yp-lemon);
+  --yellow-lt: #FEF3C7;
+  --yellow-dk: #92400E;
+  --peach: var(--yp-peach);
+  --peach-lt: #FFEDD5;
+  --peach-dk: #9A3412;
+
+  --bg: var(--yp-bg);
+  --bg-el: var(--yp-surface);
+  --bg-sk: #F7EFFA;
+  --text: var(--yp-text);
+  --text-sf: var(--yp-text-soft);
+  --text-mt: #A89BB7;
+  --border: var(--yp-border);
 
   --stage-budweiser: #FFB3B3;
   --stage-budweiser-bg: #FFF0F0;
@@ -40,12 +53,10 @@ body {
   color: var(--text);
   font-family: var(--font-nunito), sans-serif;
   overflow-x: hidden;
-  /* Prevent bounce effect on mobile but allow internal scrolls */
   overscroll-behavior-y: none;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* App-like experience */
 @supports (padding-top: env(safe-area-inset-top)) {
   .safe-pt { padding-top: env(safe-area-inset-top); }
   .safe-pb { padding-bottom: env(safe-area-inset-bottom); }
@@ -103,11 +114,14 @@ h1, h2, h3, .font-fredoka {
   animation: bounceIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
-/* Scroll Snap for Mobile Board */
 .snap-x-mandatory {
   scroll-snap-type: x mandatory;
 }
 
-.snap-center {
-  scroll-snap-align: center;
+.snap-start {
+  scroll-snap-align: start;
+}
+
+.snap-stop-always {
+  scroll-snap-stop: always;
 }

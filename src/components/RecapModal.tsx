@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { SHOWS, STAGES, Show } from "@/data/lineup";
-import { X, Check, Music } from "lucide-react";
+import { useEffect, useState } from "react";
+import { SHOWS, STAGES } from "@/data/lineup";
 import { useRouter } from "next/navigation";
 
 export function RecapModal({ 
@@ -16,14 +15,14 @@ export function RecapModal({
   const [selectedShows, setSelectedShows] = useState<number[]>([]);
   const router = useRouter();
 
-  useState(() => {
+  useEffect(() => {
     const nickname = localStorage.getItem("user_nickname");
     const votes = JSON.parse(localStorage.getItem(`festival_votes_${festivalId}`) || "{}");
-    const preSelected = SHOWS.filter(s => 
+    const preSelected = SHOWS.filter((s) =>
       votes[s.id]?.some((v: any) => v.nickname === nickname && v.type === "vou")
-    ).map(s => s.id);
+    ).map((s) => s.id);
     setSelectedShows(preSelected);
-  });
+  }, [festivalId]);
 
   const handleToggle = (id: number) => {
     setSelectedShows(prev => 
@@ -38,12 +37,12 @@ export function RecapModal({
 
   return (
     <div className="fixed inset-0 bg-text/40 backdrop-blur-sm z-[100] flex items-center justify-center p-xl">
-      <div className="bg-bg-el border-2 border-border rounded-xl w-full max-w-[500px] shadow-lg animate-bounce-in flex flex-col max-h-[80vh]">
+      <div className="bg-bg border-2 border-border rounded-xl w-full max-w-[500px] shadow-lg animate-bounce-in flex flex-col max-h-[80vh] overflow-hidden">
         
         {step === 1 ? (
           <div className="p-xl flex flex-col gap-lg items-center text-center">
-            <div className="w-2xl h-2xl bg-pink-lt rounded-full flex items-center justify-center text-pink-dk animate-pulse">
-              <Music size={40} />
+            <div className="w-20 h-20 bg-pink-lt border-2 border-pink rounded-full flex items-center justify-center text-[28px]">
+              🎬
             </div>
             <div className="flex flex-col gap-sm">
               <h2 className="text-h1 font-fredoka font-bold text-text">
@@ -56,13 +55,13 @@ export function RecapModal({
             <div className="flex gap-md w-full">
               <button 
                 onClick={onClose}
-                className="flex-1 bg-bg-sk border-1.5 border-border py-md px-xl rounded-md font-nunito font-bold text-text-sf bounce-hover"
+                className="flex-1 h-11 bg-bg-sk border-2 border-border rounded-md font-nunito font-bold text-text active:scale-95 transition-all"
               >
                 Ainda não!
               </button>
               <button 
                 onClick={() => setStep(2)}
-                className="flex-1 bg-pink text-white py-md px-xl rounded-md font-nunito font-bold bounce-hover"
+                className="flex-1 h-11 bg-lilac border-2 border-lilac text-white rounded-md font-nunito font-bold active:scale-95 transition-all"
               >
                 Acabou sim 🫡
               </button>
@@ -74,8 +73,12 @@ export function RecapModal({
               <h2 className="text-h2 font-fredoka font-bold text-text">
                 Onde você estava? 🎵
               </h2>
-              <button onClick={onClose} className="p-xs text-text-mt hover:text-text-sf transition-colors">
-                <X size={24} />
+              <button
+                onClick={onClose}
+                className="w-11 h-11 rounded-full border-2 border-border bg-bg-el text-text flex items-center justify-center active:scale-95 transition-all"
+                aria-label="Fechar"
+              >
+                ✕
               </button>
             </div>
 
@@ -91,13 +94,13 @@ export function RecapModal({
                     key={show.id}
                     onClick={() => handleToggle(show.id)}
                     className={`flex items-center gap-md p-md rounded-lg border-2 transition-all text-left ${
-                      isSelected ? "bg-white border-lilac scale-[1.02]" : "bg-bg-sk border-border opacity-70"
+                      isSelected ? "bg-bg-el border-lilac scale-[1.02]" : "bg-bg-sk border-border opacity-90"
                     }`}
                   >
-                    <div className={`w-xl h-xl rounded-md flex items-center justify-center transition-all ${
-                      isSelected ? "bg-lilac text-white" : "bg-white border border-border"
+                    <div className={`w-11 h-11 rounded-md flex items-center justify-center transition-all border-2 ${
+                      isSelected ? "bg-lilac text-white border-lilac" : "bg-bg-el border-border text-text"
                     }`}>
-                      {isSelected && <Check size={20} />}
+                      {isSelected ? "✅" : ""}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-fredoka font-semibold text-text truncate">{show.artist}</p>
@@ -113,7 +116,7 @@ export function RecapModal({
             <div className="p-xl border-t border-border bg-bg-sk">
               <button 
                 onClick={handleFinish}
-                className="w-full bg-lilac text-white py-[14px] px-xl rounded-md font-nunito font-bold bounce-hover flex items-center justify-center gap-sm"
+                className="w-full h-11 bg-lilac border-2 border-lilac text-white rounded-md font-nunito font-bold active:scale-95 transition-all"
               >
                 Gerar minha arte ✨
               </button>

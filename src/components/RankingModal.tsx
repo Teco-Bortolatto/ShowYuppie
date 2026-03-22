@@ -1,7 +1,6 @@
 "use client";
 
 import { SHOWS, STAGES } from "@/data/lineup";
-import { X, AlertTriangle } from "lucide-react";
 
 interface Vote {
   nickname: string;
@@ -44,7 +43,6 @@ export function RankingModal({
       <div className="bg-bg-el border-2 border-border rounded-xl w-full max-w-[600px] max-h-[80vh] overflow-hidden flex flex-col shadow-lg animate-bounce-in">
         <div className="p-xl border-b border-border flex items-center justify-between bg-bg-sk">
           <div className="flex items-center gap-sm">
-            <span className="text-[20px]">🏆</span>
             <h2 className="text-h1 font-fredoka font-semibold text-text">
               Ranking da Galera 🏆
             </h2>
@@ -52,8 +50,9 @@ export function RankingModal({
           <button 
             onClick={onClose}
             className="p-sm rounded-md hover:bg-white transition-colors text-text-sf"
+            aria-label="Fechar"
           >
-            <X size={24} />
+            ✕
           </button>
         </div>
 
@@ -84,9 +83,9 @@ export function RankingModal({
                         {show.artist}
                       </h3>
                       {hasConflict && (
-                        <span title="Conflito de horário">
-                          <AlertTriangle size={14} className="text-yellow-dk flex-shrink-0" />
-                        </span>
+                        <div className="text-[14px] leading-none" aria-label="Conflito de horário">
+                          ⚠️
+                        </div>
                       )}
                     </div>
                     <p className="text-tiny font-nunito text-text-sf flex items-center gap-xs">

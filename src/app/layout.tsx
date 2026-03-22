@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fredoka, Nunito } from "next/font/google";
+import { Fredoka, Quicksand } from "next/font/google";
 import "./globals.css";
 
 const fredoka = Fredoka({
@@ -8,9 +8,9 @@ const fredoka = Fredoka({
   variable: "--font-fredoka",
 });
 
-const nunito = Nunito({
+const nunito = Quicksand({
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-nunito",
 });
 

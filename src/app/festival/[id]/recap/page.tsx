@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect, use } from "react";
-import { SHOWS, STAGES, Show } from "@/data/lineup";
-import { ChevronLeft, Download, Share2, Sparkles, Music, Clock, MapPin } from "lucide-react";
+import { SHOWS, STAGES } from "@/data/lineup";
 import Link from "next/link";
 import html2canvas from "html2canvas";
 
@@ -18,6 +17,7 @@ export default function RecapPage({ params }: RecapPageProps) {
   const [attendedShows, setAttendedShows] = useState<number[]>([]);
   const [template, setTemplate] = useState<Template>("dreamy");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {
     setNickname(localStorage.getItem("user_nickname") || "Show Lover");
@@ -31,7 +31,7 @@ export default function RecapPage({ params }: RecapPageProps) {
   
   const stats = {
     count: myShows.length,
-    hours: myShows.length * 0.75, // Simplified
+    hours: myShows.length * 0.75,
     topStage: myShows.reduce((acc, s) => {
       acc[s.stage] = (acc[s.stage] || 0) + 1;
       return acc;
@@ -74,35 +74,43 @@ export default function RecapPage({ params }: RecapPageProps) {
         console.error(err);
       }
     } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert("Link copiado! 🔗");
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        setToast("🔗 Link copiado!");
+      } catch {
+        setToast("Hmm, não deu pra copiar 😵");
+      }
+      setTimeout(() => setToast(null), 2200);
     }
   };
 
   const templateStyles = {
-    dreamy: "bg-gradient-to-b from-lilac-lt via-pink-lt to-bg text-text",
-    neon: "bg-gradient-to-b from-[#1a1a1a] to-[#2D2235] text-white",
-    candy: "bg-gradient-to-br from-mint-lt via-yellow-lt to-peach-lt text-text",
+    dreamy: "bg-gradient-to-b from-[var(--yp-lilac)] via-[var(--yp-pink)] to-[var(--yp-bg)] text-text",
+    neon: "bg-gradient-to-b from-[#1F1225] to-[#0B0710] text-white",
+    candy: "bg-gradient-to-br from-[var(--yp-mint)] via-[var(--yp-lemon)] to-[var(--yp-peach)] text-text",
   };
 
   return (
     <main className="min-h-screen bg-bg flex flex-col items-center py-xl px-md gap-xl">
       <header className="w-full max-w-[400px] flex items-center justify-between">
-        <Link href={`/festival/${id}`} className="p-sm rounded-md hover:bg-bg-sk transition-colors">
-          <ChevronLeft size={24} className="text-text-sf" />
+        <Link
+          href={`/festival/${id}`}
+          className="w-11 h-11 rounded-full bg-bg-sk border-2 border-border flex items-center justify-center text-text active:scale-95 transition-all"
+          aria-label="Voltar"
+        >
+          ⬅️
         </Link>
         <h1 className="text-h2 font-fredoka font-bold text-text">Meu Recap ✨</h1>
-        <div className="w-10" />
+        <div className="w-11 h-11" />
       </header>
 
-      {/* Template Toggles */}
       <div className="flex bg-bg-sk p-xs rounded-md gap-xs">
         {(["dreamy", "neon", "candy"] as Template[]).map(t => (
           <button
             key={t}
             onClick={() => setTemplate(t)}
-            className={`px-md py-sm rounded-sm text-tiny font-nunito font-bold capitalize transition-all ${
-              template === t ? "bg-lilac text-white shadow-sm" : "text-text-sf hover:bg-white"
+            className={`px-md py-sm rounded-md text-tiny font-nunito font-bold capitalize transition-all border-2 ${
+              template === t ? "bg-lilac text-white border-lilac" : "bg-transparent text-text-sf border-border hover:bg-bg-el"
             }`}
           >
             {t}
@@ -110,18 +118,16 @@ export default function RecapPage({ params }: RecapPageProps) {
         ))}
       </div>
 
-      {/* The Poster */}
       <div 
         id="recap-poster"
         className={`w-full max-w-[360px] aspect-[9/16] rounded-xl shadow-2xl p-xl flex flex-col gap-xl relative overflow-hidden ${templateStyles[template]}`}
       >
-        {/* Decorations */}
-        <div className="absolute top-10 right-10 opacity-20"><Music size={60} /></div>
-        <div className="absolute bottom-20 left-10 opacity-20"><Sparkles size={80} /></div>
+        <div className="absolute top-8 right-8 opacity-25 text-[44px]">🎶</div>
+        <div className="absolute bottom-16 left-6 opacity-25 text-[56px]">✨</div>
 
         <div className="relative z-10 flex flex-col h-full">
           <div className="text-center mb-xl">
-            <h2 className={`text-h1 font-fredoka font-bold ${template === 'neon' ? 'text-lilac' : 'text-text'}`}>
+            <h2 className={`text-h1 font-fredoka font-bold ${template === "neon" ? "text-[var(--yp-lilac)]" : "text-text"}`}>
               Show Yuppie 🎪
             </h2>
             <p className="text-tiny font-nunito font-bold uppercase tracking-widest opacity-70">
@@ -131,7 +137,7 @@ export default function RecapPage({ params }: RecapPageProps) {
 
           <div className="mb-xl">
             <p className="text-body font-nunito italic mb-xs opacity-80">O festival de:</p>
-            <h3 className={`text-[32px] font-fredoka font-bold leading-tight ${template === 'neon' ? 'text-pink' : 'text-lilac-dk'}`}>
+            <h3 className={`text-[32px] font-fredoka font-bold leading-tight ${template === "neon" ? "text-[var(--yp-pink)]" : "text-lilac-dk"}`}>
               {nickname}
             </h3>
           </div>
@@ -156,15 +162,15 @@ export default function RecapPage({ params }: RecapPageProps) {
             </div>
           </div>
 
-          <div className={`mt-auto p-md rounded-lg border-2 ${template === 'neon' ? 'bg-white/5 border-white/10' : 'bg-white/40 border-white/60'} backdrop-blur-md`}>
+          <div className={`mt-auto p-md rounded-lg border-2 ${template === "neon" ? "bg-[#1F1225]/70 border-white/20" : "bg-bg-el border-border"} backdrop-blur-md`}>
             <div className="grid grid-cols-2 gap-md">
               <div className="flex flex-col items-center text-center">
-                <Clock size={20} className="mb-xs text-lilac" />
+                <div className="mb-xs text-[18px]">⏰</div>
                 <p className="text-[20px] font-fredoka font-bold">{stats.count}</p>
                 <p className="text-[10px] font-nunito uppercase font-bold opacity-60">Shows vistos</p>
               </div>
               <div className="flex flex-col items-center text-center">
-                <MapPin size={20} className="mb-xs text-pink" />
+                <div className="mb-xs text-[18px]">📍</div>
                 <p className="text-[20px] font-fredoka font-bold truncate w-full px-xs">
                   {topStage?.name.split(' ')[1] || "Vários"}
                 </p>
@@ -175,23 +181,29 @@ export default function RecapPage({ params }: RecapPageProps) {
         </div>
       </div>
 
-      {/* Actions */}
       <div className="w-full max-w-[360px] flex gap-md">
         <button
           onClick={handleDownload}
           disabled={isGenerating}
-          className="flex-1 bg-lilac text-white font-nunito font-bold py-md px-xl rounded-md bounce-hover flex items-center justify-center gap-sm disabled:opacity-50"
+          className="flex-1 h-11 bg-lilac border-2 border-lilac text-white font-nunito font-bold rounded-md active:scale-95 transition-all disabled:opacity-50"
+          aria-label="Salvar imagem"
         >
-          <Download size={20} />
-          {isGenerating ? "Gerando..." : "Salvar imagem"}
+          {isGenerating ? "Gerando..." : "📸 Salvar imagem"}
         </button>
         <button
           onClick={handleShare}
-          className="bg-white border-2 border-border p-md rounded-md bounce-hover text-text-sf"
+          className="w-11 h-11 bg-bg-el border-2 border-border rounded-md text-text active:scale-95 transition-all flex items-center justify-center"
+          aria-label="Compartilhar"
         >
-          <Share2 size={24} />
+          📲
         </button>
       </div>
+
+      {toast && (
+        <div role="status" aria-live="polite" className="fixed top-[84px] left-1/2 -translate-x-1/2 bg-mint border-2 border-mint rounded-md px-4 py-2 text-mint-dk font-nunito font-bold z-[120]">
+          {toast}
+        </div>
+      )}
     </main>
   );
 }
