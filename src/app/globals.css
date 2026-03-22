@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+:root {
+  --lilac: #C8B6FF;
+  --lilac-lt: #E8DEFF;
+  --lilac-dk: #9B85E3;
+  --pink: #FFB3C6;
+  --pink-lt: #FFD6E0;
+  --pink-dk: #E8849B;
+  --mint: #A8E6CF;
+  --mint-lt: #D0F5E6;
+  --mint-dk: #5CB88A;
+  --yellow: #FFE066;
+  --yellow-lt: #FFF3B8;
+  --yellow-dk: #C9A800;
+  --peach: #FFCBA4;
+  --peach-lt: #FFE5D0;
+  --peach-dk: #D4895A;
+
+  --bg: #FFFBFE;
+  --bg-el: #FFFFFF;
+  --bg-sk: #F5F0FA;
+  --text: #2D2235;
+  --text-sf: #7A6E87;
+  --text-mt: #B8AEC5;
+  --border: #E8E0F0;
+
+  --stage-budweiser: #FFB3B3;
+  --stage-budweiser-bg: #FFF0F0;
+  --stage-samsung: #B3D4FF;
+  --stage-samsung-bg: #F0F5FF;
+  --stage-flyingfish: #B3FFD9;
+  --stage-flyingfish-bg: #F0FFF5;
+  --stage-perrys: #FFE0B3;
+  --stage-perrys-bg: #FFFAF0;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-nunito), sans-serif;
+  overflow-x: hidden;
+  /* Prevent bounce effect on mobile but allow internal scrolls */
+  overscroll-behavior-y: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* App-like experience */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .safe-pt { padding-top: env(safe-area-inset-top); }
+  .safe-pb { padding-bottom: env(safe-area-inset-bottom); }
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.custom-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+h1, h2, h3, .font-fredoka {
+  font-family: var(--font-fredoka), sans-serif;
+}
+
+.bg-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 2L21.5 15L35 16.5L21.5 18L20 31L18.5 18L5 16.5L18.5 15L20 2Z' fill='%23C8B6FF' fill-opacity='0.1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+.bounce-hover {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+}
+
+.bounce-hover:hover {
+  transform: scale(1.05);
+}
+
+.bounce-hover:active {
+  transform: scale(0.95);
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.1);
+  }
+  80% {
+    opacity: 1;
+    transform: scale(0.89);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-bounce-in {
+  animation: bounceIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Scroll Snap for Mobile Board */
+.snap-x-mandatory {
+  scroll-snap-type: x mandatory;
+}
+
+.snap-center {
+  scroll-snap-align: center;
+}
