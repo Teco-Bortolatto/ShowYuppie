@@ -75,7 +75,11 @@ h1, h2, h3, .font-fredoka {
 }
 
 .bg-pattern {
-  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 2L21.5 15L35 16.5L21.5 18L20 31L18.5 18L5 16.5L18.5 15L20 2Z' fill='%23C8B6FF' fill-opacity='0.1'/%3E%3C/svg%3E");
+  background-image:
+    radial-gradient(circle at 10px 10px, var(--lilac-lt) 0 2px, transparent 3px),
+    radial-gradient(circle at 30px 20px, var(--pink-lt) 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 20px 34px, var(--mint-lt) 0 1.5px, transparent 2.5px);
+  background-size: 40px 40px;
   background-repeat: repeat;
 }
 
