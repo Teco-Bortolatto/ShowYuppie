@@ -141,7 +141,7 @@ export function ShowCard({
           {show.artist}
         </h3>
         <div className="flex items-center gap-1">
-          <div className="text-[11px] font-nunito text-text-sf">
+          <div className="text-[11px] font-nunito font-bold text-text bg-lilac-lt border-2 border-lilac rounded-md px-2 py-1">
             {show.start} - {show.end}
           </div>
         </div>

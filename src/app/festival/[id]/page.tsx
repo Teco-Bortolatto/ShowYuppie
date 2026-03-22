@@ -3,7 +3,6 @@
 import { use, useEffect, useState } from "react";
 import { Board } from "@/components/Board";
 import { NicknameModal } from "@/components/NicknameModal";
-import { RankingModal } from "@/components/RankingModal";
 import { RecapModal } from "@/components/RecapModal";
 import Link from "next/link";
 
@@ -16,10 +15,8 @@ export default function FestivalPage({ params }: FestivalPageProps) {
   const [festivalName, setFestivalName] = useState("Lollapalooza 2026 🤘");
   const [toast, setToast] = useState<string | null>(null);
   const [nickname, setNickname] = useState<string | null>(null);
-  const [isRankingOpen, setIsRankingOpen] = useState(false);
   const [isRecapOpen, setIsRecapOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
-  const [votes, setVotes] = useState<any>({});
 
   useEffect(() => {
     const savedName = localStorage.getItem("user_nickname");
@@ -30,17 +27,6 @@ export default function FestivalPage({ params }: FestivalPageProps) {
       const data = JSON.parse(savedFestival);
       setFestivalName(data.name);
     }
-
-    const savedVotes = localStorage.getItem(`festival_votes_${id}`);
-    if (savedVotes) setVotes(JSON.parse(savedVotes));
-
-    const handleStorageChange = () => {
-      const updatedVotes = localStorage.getItem(`festival_votes_${id}`);
-      if (updatedVotes) setVotes(JSON.parse(updatedVotes));
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
   }, [id]);
 
   const copyLink = async () => {
@@ -82,19 +68,6 @@ export default function FestivalPage({ params }: FestivalPageProps) {
           </button>
 
           <button
-            onClick={() => {
-              const currentVotes = localStorage.getItem(`festival_votes_${id}`);
-              if (currentVotes) setVotes(JSON.parse(currentVotes));
-              setIsRankingOpen(true);
-            }}
-            className="w-11 h-11 rounded-full bg-yellow-lt border-2 border-yellow text-yellow-dk hover:bg-yellow active:scale-95 transition-all flex items-center justify-center"
-            title="Ranking"
-            aria-label="Ranking"
-          >
-            🏆
-          </button>
-
-          <button
             onClick={() => setIsShareOpen(true)}
             className="w-11 h-11 rounded-full bg-lilac-lt border-2 border-lilac text-lilac-dk hover:bg-pink-lt active:scale-95 transition-all flex items-center justify-center"
             title="Compartilhar"
@@ -122,13 +95,6 @@ export default function FestivalPage({ params }: FestivalPageProps) {
 
       <NicknameModal onSave={setNickname} />
 
-      {isRankingOpen && (
-        <RankingModal 
-          votes={votes} 
-          onClose={() => setIsRankingOpen(false)} 
-        />
-      )}
-
       {isRecapOpen && (
         <RecapModal 
           festivalId={id} 
@@ -137,8 +103,8 @@ export default function FestivalPage({ params }: FestivalPageProps) {
       )}
 
       {isShareOpen && (
-        <div className="fixed inset-0 z-[120] bg-text/40 backdrop-blur-sm flex items-end justify-center p-4">
-          <div className="w-full max-w-[420px] bg-bg-el border-2 border-border rounded-xl p-4 animate-bounce-in">
+        <div className="fixed inset-0 z-[120] bg-bg flex items-end justify-center p-4">
+          <div className="w-full max-w-[420px] bg-pink-lt border-2 border-lilac rounded-xl p-4 animate-bounce-in shadow-2xl">
             <div className="flex items-start justify-between gap-3">
               <div className="flex flex-col gap-1">
                 <div className="text-h3 font-fredoka font-bold text-text">
@@ -150,7 +116,7 @@ export default function FestivalPage({ params }: FestivalPageProps) {
               </div>
               <button
                 onClick={() => setIsShareOpen(false)}
-                className="w-11 h-11 rounded-full border-2 border-border bg-bg-sk text-text flex items-center justify-center active:scale-95 transition-all"
+                className="w-11 h-11 rounded-full border-2 border-lilac bg-bg-el text-text flex items-center justify-center active:scale-95 transition-all"
                 aria-label="Fechar"
               >
                 ✕
@@ -161,7 +127,7 @@ export default function FestivalPage({ params }: FestivalPageProps) {
               <input
                 readOnly
                 value={typeof window !== "undefined" ? window.location.href : ""}
-                className="w-full bg-bg-sk border-2 border-border rounded-md px-3 py-3 text-small font-nunito text-text"
+                className="w-full bg-bg-el border-2 border-lilac rounded-md px-3 py-3 text-small font-nunito text-text"
                 aria-label="Link do festival"
               />
               <div className="flex gap-3">
@@ -173,7 +139,7 @@ export default function FestivalPage({ params }: FestivalPageProps) {
                 </button>
                 <button
                   onClick={() => setIsShareOpen(false)}
-                  className="flex-1 bg-transparent border-2 border-lilac text-lilac-dk rounded-md py-3 text-body font-nunito font-bold active:scale-95 transition-all"
+                  className="flex-1 bg-bg-el border-2 border-lilac text-lilac-dk rounded-md py-3 text-body font-nunito font-bold active:scale-95 transition-all"
                 >
                   Fechar
                 </button>
