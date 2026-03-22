@@ -36,8 +36,8 @@ export function RecapModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-text/40 backdrop-blur-sm z-[100] flex items-center justify-center p-xl">
-      <div className="bg-bg border-2 border-border rounded-xl w-full max-w-[500px] shadow-lg animate-bounce-in flex flex-col max-h-[80vh] overflow-hidden">
+    <div className="fixed inset-0 bg-bg z-[100] flex items-center justify-center p-xl">
+      <div className="bg-bg-el border-2 border-lilac rounded-xl w-full max-w-[500px] shadow-2xl animate-bounce-in flex flex-col max-h-[80vh] overflow-hidden">
         
         {step === 1 ? (
           <div className="p-xl flex flex-col gap-lg items-center text-center">
